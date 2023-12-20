@@ -8,7 +8,7 @@ import {
   updateUser,
 } from "@/database/actions/user.actions";
 import { clerkClient } from "@clerk/nextjs";
-import { CreateUserParams, IUser } from "@/types";
+import { CreateUserParams, IResponseTypes, IUser } from "@/types";
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
@@ -64,7 +64,6 @@ export async function POST(req: Request) {
 
   // Get the ID and type
   const eventType = evt.type;
-
   if (eventType === "user.created") {
     const { id, email_addresses, image_url, first_name, last_name, username } =
       evt.data;
@@ -76,19 +75,18 @@ export async function POST(req: Request) {
       lastName: last_name,
       username: username!,
     };
-
-    const newUser = await createUser(user);
-    if (newUser) {
+    const { data, success }: IResponseTypes<IUser> = await createUser(user);
+    if (success && data) {
       await clerkClient.users.updateUserMetadata(id, {
         publicMetadata: {
-          userId: newUser._id,
+          userId: data._id,
         },
       });
 
       return sendApiResponse<CreateUserParams>({
         statusCode: 200,
         success: true,
-        data: newUser,
+        data,
         error: null,
       });
     }

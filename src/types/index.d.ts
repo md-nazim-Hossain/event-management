@@ -4,8 +4,8 @@ export interface IEvent extends Document {
   description?: string;
   location?: string;
   imageUrl: string;
-  startDate: Date;
-  endDate: Date;
+  startDateTime: Date;
+  endDateTime: Date;
   price: number;
   isFree: boolean;
   url?: string;
@@ -161,7 +161,7 @@ export type CreateCategoryParams = {
 export type CheckoutOrderParams = {
   eventTitle: string;
   eventId: string;
-  price: string;
+  price: number;
   isFree: boolean;
   buyerId: string;
 };
@@ -207,4 +207,5 @@ export interface IResponseTypes<T> {
   error?: any;
   success: boolean;
   statusCode: number;
+  totalPages?: number;
 }

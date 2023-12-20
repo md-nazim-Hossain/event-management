@@ -133,18 +133,3 @@ export const sendServerActionResponse = <T>({
     })
   );
 };
-
-export const catchServerActionsAsync = <T>(fn: Function) => {
-  return async (data: T) => {
-    try {
-      return await fn(data);
-    } catch (error) {
-      return sendServerActionResponse({
-        statusCode: 500,
-        success: false,
-        data: null,
-        error: error,
-      });
-    }
-  };
-};

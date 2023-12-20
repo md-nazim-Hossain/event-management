@@ -1,16 +1,15 @@
 "use server";
 
-import { catchServerActionsAsync, sendServerActionResponse } from "@/lib/utils";
+import { sendServerActionResponse } from "@/lib/utils";
 import { CreateUserParams, IUser, UpdateUserParams } from "@/types";
-import { connectToDb } from "..";
 import { User } from "../models/user.model";
 import { Event } from "../models/event.model";
 import { Order } from "../models/order.model";
 import { revalidatePath } from "next/cache";
+import { catchServerActionsAsync } from "@/lib/catchAsync";
 
 export const createUser = catchServerActionsAsync<CreateUserParams>(
   async (user: CreateUserParams) => {
-    await connectToDb();
     const newUser = await User.create(user);
     return sendServerActionResponse<IUser>({
       statusCode: 200,
@@ -22,7 +21,6 @@ export const createUser = catchServerActionsAsync<CreateUserParams>(
 
 export const getUserById = catchServerActionsAsync<string>(
   async (userId: string) => {
-    await connectToDb();
     const user: IUser | null = await User.findById(userId);
     if (!user) throw new Error("User not found");
     return sendServerActionResponse<IUser>({
@@ -35,7 +33,6 @@ export const getUserById = catchServerActionsAsync<string>(
 
 export const updateUser = catchServerActionsAsync<UpdateUserParams>(
   async (user: UpdateUserParams & { clerkId: string }) => {
-    await connectToDb();
     const updatedUser = await User.findOneAndUpdate(
       { clerkId: user.clerkId },
       user,
@@ -52,7 +49,6 @@ export const updateUser = catchServerActionsAsync<UpdateUserParams>(
 );
 export const deleteUser = catchServerActionsAsync<string>(
   async (clerkId: string) => {
-    await connectToDb();
     const userToDelete = await User.findOne({ clerkId });
     if (!userToDelete) throw new Error("User not found");
     await Promise.all([
