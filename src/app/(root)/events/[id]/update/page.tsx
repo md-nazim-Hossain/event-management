@@ -12,7 +12,7 @@ type UpdateEventProps = {
 const UpdateEvent = async ({ params: { id } }: UpdateEventProps) => {
   const { sessionClaims } = auth();
   const { data: event }: IResponseTypes<IEvent> = await getEventById(id);
-  const userId = event?.organizer?._id;
+  const userId = sessionClaims?.userId;
   return (
     <>
       <section className="bg-primary-50 bg-dotted-pattern bg-cover bg-center py-5 md:py-10">
@@ -26,7 +26,7 @@ const UpdateEvent = async ({ params: { id } }: UpdateEventProps) => {
           type="Update"
           event={event ?? undefined}
           eventId={event?._id ?? ""}
-          userId={userId}
+          userId={userId as string}
         />
       </div>
     </>

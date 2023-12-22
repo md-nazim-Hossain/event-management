@@ -7,17 +7,27 @@ import { Event } from "../models/event.model";
 import { Order } from "../models/order.model";
 import { revalidatePath } from "next/cache";
 import { catchServerActionsAsync } from "@/lib/catchAsync";
+import { connectToDb } from "..";
 
-export const createUser = catchServerActionsAsync<CreateUserParams>(
-  async (user: CreateUserParams) => {
+// export const createUser = catchServerActionsAsync<CreateUserParams>(
+//   async (user: CreateUserParams) => {
+//     const newUser = await User.create(user);
+//     return sendServerActionResponse<IUser>({
+//       statusCode: 200,
+//       success: true,
+//       data: newUser,
+//     });
+//   }
+// );
+export async function createUser(user: CreateUserParams) {
+  try {
+    await connectToDb();
     const newUser = await User.create(user);
-    return sendServerActionResponse<IUser>({
-      statusCode: 200,
-      success: true,
-      data: newUser,
-    });
+    return JSON.parse(JSON.stringify(newUser));
+  } catch (error) {
+    console.log(error);
   }
-);
+}
 
 export const getUserById = catchServerActionsAsync<string>(
   async (userId: string) => {

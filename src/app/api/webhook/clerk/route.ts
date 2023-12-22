@@ -75,18 +75,18 @@ export async function POST(req: Request) {
       lastName: last_name,
       username: username!,
     };
-    const { data, success }: IResponseTypes<IUser> = await createUser(user);
-    if (success && data) {
+    const newUser = await createUser(user);
+    if (newUser) {
       await clerkClient.users.updateUserMetadata(id, {
         publicMetadata: {
-          userId: data._id,
+          userId: newUser._id,
         },
       });
 
       return sendApiResponse<CreateUserParams>({
         statusCode: 200,
         success: true,
-        data,
+        data: newUser,
         error: null,
       });
     }

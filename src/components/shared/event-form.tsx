@@ -24,7 +24,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 import { useUploadThing } from "@/utils/uploadthing";
-import CreateEvent from "@/app/(root)/events/create/page";
 import { useRouter } from "next/navigation";
 import { ICategory, IEvent, IResponseTypes } from "@/types";
 import { createEvent, updateEvent } from "@/database/actions/event.actions";

@@ -29,7 +29,7 @@ const getCategoryByName = async (name: string) => {
 };
 export const createEvent = catchServerActionsAsync<CreateEventParams>(
   async ({ event, userId, path }: CreateEventParams) => {
-    const organizer = await User.findOne({ clerkId: userId });
+    const organizer = await User.findById(userId);
     if (!organizer) throw new Error("User not found");
     const newEvent = await Event.create({
       ...event,
