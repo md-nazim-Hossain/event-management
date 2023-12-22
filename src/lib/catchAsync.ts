@@ -1,8 +1,9 @@
 import { connectToDb } from "@/database";
 import { sendServerActionResponse } from "./utils";
+import { IResponseTypes } from "@/types";
 
-export const catchServerActionsAsync = <T>(fn: Function) => {
-  return async (data?: T) => {
+export const catchServerActionsAsync = <T>(fn: Function): Function => {
+  return async (data?: T): Promise<IResponseTypes<T>> => {
     try {
       await connectToDb();
       return await fn(data);

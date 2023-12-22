@@ -32,7 +32,7 @@ function DropDown({ onChange, value }: Props) {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [newCategory, setNewCategory] = useState<string>("");
   const handleAddCategory = () => {
-    createCategory({ categoryName: newCategory.trim() }).then((res) => {
+    createCategory({ categoryName: newCategory.trim() }).then((res: any) => {
       setCategories((prev) => [...prev, res.data]);
     });
   };

@@ -1,6 +1,6 @@
 import stripe from "stripe";
-import { NextResponse } from "next/server";
 import { createOrder } from "@/database/actions/order.actions";
+import { sendApiResponse } from "@/lib/utils";
 
 export async function POST(request: Request) {
   const body = await request.text();
@@ -13,7 +13,12 @@ export async function POST(request: Request) {
   try {
     event = stripe.webhooks.constructEvent(body, sig, endpointSecret);
   } catch (err) {
-    return NextResponse.json({ message: "Webhook error", error: err });
+    return sendApiResponse({
+      statusCode: 400,
+      success: false,
+      data: null,
+      error: "Stripe webhook error",
+    });
   }
 
   // Get the ID and type
@@ -32,8 +37,18 @@ export async function POST(request: Request) {
     };
 
     const newOrder = await createOrder(order);
-    return NextResponse.json({ message: "OK", order: newOrder });
+    return sendApiResponse({
+      statusCode: 200,
+      success: true,
+      data: newOrder,
+      error: null,
+    });
   }
 
-  return new Response("", { status: 200 });
+  return sendApiResponse({
+    statusCode: 200,
+    success: true,
+    data: null,
+    error: null,
+  });
 }

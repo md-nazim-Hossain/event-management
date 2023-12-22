@@ -26,8 +26,8 @@ import { Checkbox } from "../ui/checkbox";
 import { useUploadThing } from "@/utils/uploadthing";
 import CreateEvent from "@/app/(root)/events/create/page";
 import { useRouter } from "next/navigation";
-import { IEvent, IResponseTypes } from "@/types";
-import { createEvent } from "@/database/actions/event.actions";
+import { ICategory, IEvent, IResponseTypes } from "@/types";
+import { createEvent, updateEvent } from "@/database/actions/event.actions";
 type Props = {
   type: "Create" | "Update";
   userId: string;
@@ -36,10 +36,12 @@ type Props = {
 };
 
 function EventForm({ type, userId, event, eventId }: Props) {
+  const category = (event?.category ?? {}) as ICategory;
   const initialValues =
     event && type === "Update"
       ? {
           ...event,
+          categoryId: category?._id ?? "",
           startDateTime: new Date(event.startDateTime),
           endDateTime: new Date(event.endDateTime),
         }
@@ -63,17 +65,42 @@ function EventForm({ type, userId, event, eventId }: Props) {
         uploadedImageUrl = uploadedImages[0].url;
       }
       if (type === "Create") {
-        const { data, success }: IResponseTypes<IEvent> = await createEvent({
-          event: {
-            ...values,
-            imageUrl: uploadedImageUrl,
-          },
-          userId,
-          path: "/profile",
-        });
+        const { data, success, error }: IResponseTypes<IEvent> =
+          await createEvent({
+            event: {
+              ...values,
+              imageUrl: uploadedImageUrl,
+            },
+            userId,
+            path: "/profile",
+          });
         if (success && data) {
           form.reset();
           router.push("/events/" + data._id);
+        } else {
+          throw new Error(error ?? "Failed to create event");
+        }
+      }
+      if (type === "Update") {
+        if (!eventId) {
+          router.back();
+          return;
+        }
+        const { data, success, error }: IResponseTypes<IEvent> =
+          await updateEvent({
+            event: {
+              ...values,
+              imageUrl: uploadedImageUrl,
+              _id: eventId,
+            },
+            userId,
+            path: `/events/${eventId}`,
+          });
+        if (success && data) {
+          form.reset();
+          router.push(`/events/${data._id}`);
+        } else {
+          throw new Error(error ?? "Failed to Update event");
         }
       }
     } catch (error) {

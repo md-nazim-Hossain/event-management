@@ -1,5 +1,6 @@
 import EventForm from "@/components/shared/event-form";
 import { getEventById } from "@/database/actions/event.actions";
+import { IEvent, IResponseTypes } from "@/types";
 import { auth } from "@clerk/nextjs";
 
 type UpdateEventProps = {
@@ -10,10 +11,8 @@ type UpdateEventProps = {
 
 const UpdateEvent = async ({ params: { id } }: UpdateEventProps) => {
   const { sessionClaims } = auth();
-
-  const userId = sessionClaims?.userId as string;
-  const event = await getEventById(id);
-
+  const { data: event }: IResponseTypes<IEvent> = await getEventById(id);
+  const userId = event?.organizer?._id;
   return (
     <>
       <section className="bg-primary-50 bg-dotted-pattern bg-cover bg-center py-5 md:py-10">
@@ -25,8 +24,8 @@ const UpdateEvent = async ({ params: { id } }: UpdateEventProps) => {
       <div className="wrapper my-8">
         <EventForm
           type="Update"
-          event={event}
-          eventId={event._id}
+          event={event ?? undefined}
+          eventId={event?._id ?? ""}
           userId={userId}
         />
       </div>

@@ -1,6 +1,6 @@
 import { IEvent } from "@/types";
-import Card from "./Card";
-import Pagination from "./Pagination";
+import Card from "./card";
+import Pagination from "./pagination";
 
 type CollectionProps = {
   data: IEvent[];

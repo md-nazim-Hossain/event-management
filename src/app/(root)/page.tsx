@@ -1,8 +1,21 @@
+import Collection from "@/components/shared/collection";
 import { Button } from "@/components/ui/button";
+import { getAllEvents } from "@/database/actions/event.actions";
+import { IEvent, IResponseTypes, SearchParamProps } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Home() {
+export default async function Home({
+  params: { id },
+  searchParams,
+}: SearchParamProps) {
+  const { data, totalPages }: IResponseTypes<IEvent[]> = await getAllEvents({
+    query: "",
+    category: "",
+    page: 1,
+    limit: 6,
+  });
+
   return (
     <>
       <section className="bg-primary-50 bg-dotted-pattern bg-contain py-5 md:py-10">
@@ -41,15 +54,15 @@ export default function Home() {
           <CategoryFilter /> */}
         </div>
 
-        {/* <Collection
-          data={events?.data}
+        <Collection
+          data={data ?? []}
           emptyTitle="No Events Found"
           emptyStateSubtext="Come back later"
           collectionType="All_Events"
           limit={6}
-          page={page}
-          totalPages={events?.totalPages}
-        /> */}
+          page={1}
+          totalPages={totalPages}
+        />
       </section>
     </>
   );
