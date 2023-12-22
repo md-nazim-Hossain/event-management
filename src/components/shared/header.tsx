@@ -3,8 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { Button } from "../ui/button";
-import NavItems from "./NavItems";
-import MobileNav from "./MobileNav";
+import NavItems from "./nav-items";
+import MobileNav from "./mobile-nav";
 
 function Header() {
   return (

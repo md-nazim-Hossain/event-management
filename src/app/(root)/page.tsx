@@ -1,18 +1,21 @@
+import CategoryFilter from "@/components/shared/category-filter";
+
 import Collection from "@/components/shared/collection";
+import Search from "@/components/shared/search";
 import { Button } from "@/components/ui/button";
 import { getAllEvents } from "@/database/actions/event.actions";
 import { IEvent, IResponseTypes, SearchParamProps } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 
-export default async function Home({
-  params: { id },
-  searchParams,
-}: SearchParamProps) {
+export default async function Home({ searchParams }: SearchParamProps) {
+  const page = Number(searchParams?.page) || 1;
+  const searchText = (searchParams?.query as string) || "";
+  const category = (searchParams?.category as string) || "";
   const { data, totalPages }: IResponseTypes<IEvent[]> = await getAllEvents({
-    query: "",
-    category: "",
-    page: 1,
+    query: searchText,
+    category,
+    page,
     limit: 6,
   });
 
@@ -50,8 +53,8 @@ export default async function Home({
         </h2>
 
         <div className="flex w-full flex-col gap-5 md:flex-row">
-          {/* <Search />
-          <CategoryFilter /> */}
+          <Search placeholder="Search events..." />
+          <CategoryFilter />
         </div>
 
         <Collection
@@ -60,7 +63,7 @@ export default async function Home({
           emptyStateSubtext="Come back later"
           collectionType="All_Events"
           limit={6}
-          page={1}
+          page={page}
           totalPages={totalPages}
         />
       </section>

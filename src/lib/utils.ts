@@ -123,6 +123,7 @@ export const sendServerActionResponse = <T>({
   success,
   data,
   error,
+  totalPages,
 }: IResponseTypes<T>) => {
   return JSON.parse(
     JSON.stringify({
@@ -130,6 +131,7 @@ export const sendServerActionResponse = <T>({
       success,
       data,
       error,
+      totalPages,
     })
   );
 };

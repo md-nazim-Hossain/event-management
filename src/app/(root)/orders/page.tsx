@@ -1,4 +1,4 @@
-import Search from "@/components/shared/Search";
+import Search from "@/components/shared/search";
 import { getOrderByEvents } from "@/database/actions/order.actions";
 import { formatDateTime, formatPrice } from "@/lib/utils";
 import { IOrderItem, SearchParamProps } from "@/types";

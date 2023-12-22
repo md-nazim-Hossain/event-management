@@ -113,7 +113,8 @@ export const getAllEvents = catchServerActionsAsync(
 
     const events = await populateEvent(eventsQuery);
     const eventsCount = await Event.countDocuments(conditions);
-    return sendServerActionResponse({
+
+    return sendServerActionResponse<IEvent[]>({
       statusCode: 200,
       success: true,
       data: events,
