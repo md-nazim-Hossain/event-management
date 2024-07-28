@@ -43,7 +43,7 @@ function EventForm({ type, userId, event, eventId }: Props) {
           categoryId: category?._id ?? "",
           startDateTime: new Date(event.startDateTime),
           endDateTime: new Date(event.endDateTime),
-          price: event?.price ?? "",
+          price: event?.price + "" ?? "",
         }
       : eventDefaultValues;
   const [files, setFiles] = React.useState<File[]>([]);
@@ -260,7 +260,7 @@ function EventForm({ type, userId, event, eventId }: Props) {
                       className="filter-grey"
                     />
                     <p className="ml-3 whitespace-nowrap text-gray-600">
-                      Start Date:
+                      End Date:
                     </p>
                     <DatePicker
                       showTimeSelect
