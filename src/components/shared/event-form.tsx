@@ -43,6 +43,7 @@ function EventForm({ type, userId, event, eventId }: Props) {
           categoryId: category?._id ?? "",
           startDateTime: new Date(event.startDateTime),
           endDateTime: new Date(event.endDateTime),
+          price: event?.price ?? "",
         }
       : eventDefaultValues;
   const [files, setFiles] = React.useState<File[]>([]);
